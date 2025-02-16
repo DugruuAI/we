@@ -1,26 +1,28 @@
+// API Configuration
 const API_KEY = 'vifQFXwFMZG1oIsX0UTfKw';
 let isGenerating = false;
 
+// Main Generation Function
 async function generateImage() {
     if (isGenerating) return;
     
-    const prompt = document.getElementById('prompt').value.trim();
+    const promptInput = document.getElementById('prompt');
     const imageElement = document.getElementById('generatedImage');
     const button = document.querySelector('button');
     
-    if (!prompt) {
-        alert("कृपया कोई टेक्स्ट डालें!");
+    if (!promptInput.value.trim()) {
+        alert("Please enter a prompt!");
         return;
     }
 
     try {
-        // Loading state शुरू करें
+        // Set loading state
         isGenerating = true;
         button.disabled = true;
-        button.innerText = "Generating...";
+        button.textContent = "Generating...";
         imageElement.src = "";
-        
-        // API Request भेजें
+
+        // Initiate generation request
         const generationResponse = await fetch('https://stablehorde.net/api/v2/generate/async', {
             method: 'POST',
             headers: {
@@ -28,55 +30,52 @@ async function generateImage() {
                 'apikey': API_KEY
             },
             body: JSON.stringify({
-                prompt: prompt,
+                prompt: promptInput.value,
                 params: {
                     width: 512,
                     height: 512,
                     steps: 30,
                     sampler_name: "k_euler",
-                    cfg_scale: 7.5,
-                    n: 1
+                    cfg_scale: 7.5
                 }
             })
         });
 
-        const generationData = await generationResponse.json();
-        const requestId = generationData.id;
+        if (!generationResponse.ok) throw new Error(API Error: ${generationResponse.status});
         
-        // Image status check करें
-        const imageData = await checkStatus(requestId);
-        imageElement.src = data:image/png;base64,${imageData};
+        const { id: requestId } = await generationResponse.json();
+        const imageBase64 = await checkGenerationStatus(requestId);
+        
+        imageElement.src = data:image/png;base64,${imageBase64};
         
     } catch (error) {
-        console.error("Generation Error:", error);
-        alert(Error: ${error.message});
+        console.error("Generation Failed:", error);
+        alert(Generation Failed: ${error.message});
     } finally {
-        // Loading state बंद करें
+        // Reset state
         isGenerating = false;
         button.disabled = false;
-        button.innerText = "Generate Image";
+        button.textContent = "Generate Image";
     }
 }
 
-async function checkStatus(requestId) {
+// Status Checking Function
+async function checkGenerationStatus(requestId) {
     while (true) {
         const statusResponse = await fetch(https://stablehorde.net/api/v2/generate/check/${requestId});
         const statusData = await statusResponse.json();
         
         if (statusData.done) {
             const resultResponse = await fetch(https://stablehorde.net/api/v2/generate/status/${requestId});
-            const resultData = await resultResponse.json();
-            return resultData.generations[0].img;
+            const { generations } = await resultResponse.json();
+            return generations[0].img;
         }
         
-        // हर 5 सेकंड में status check करें
         await new Promise(resolve => setTimeout(resolve, 5000));
     }
 }
 
-// Enter key support
-document.getElementById('prompt').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        generateImage();
-    }
+// Enter Key Support
+document.getElementById('prompt').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') generateImage();
 });
