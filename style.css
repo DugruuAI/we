@@ -19,6 +19,57 @@ header {
 /* Generator Section */
 .generator {
     margin-top: 50px;
+} 
+/* वेबसाइट को मोबाइल और PC पर सही दिखाने के लिए */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #0d1117; /* Dark Mode Look */
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Input Box को स्टाइल देना */
+input {
+    width: 90%;
+    max-width: 500px;
+    padding: 10px;
+    font-size: 16px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid white;
+    background-color: #161b22;
+    color: white;
+}
+
+/* Generate Button */
+button {
+    background-color: #58a6ff;
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #1f6feb;
+}
+
+/* Generated Image */
+img {
+    margin-top: 20px;
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5);
 }
 
 input {
