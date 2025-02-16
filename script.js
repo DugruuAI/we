@@ -1,78 +1,136 @@
-"use strict";  // यह सभी Syntax Errors पकड़ने में मदद करेगा
-console.log("✅ Script Loaded Successfully!");
-// ✅ Image Generate करने वाला Function (Async Await का इस्तेमाल करके)
-async function generateImage() {
-    const prompt = document.getElementById("prompt").value;
-
-    if (prompt.trim() === "") {
-        alert("कृपया एक प्रॉम्प्ट दर्ज करें!");
-        return;
-    }
-
-    const apiUrl = "https://stablehorde.net/api/v2/generate/async";
-    const apiKey = "your-api-key-here"; // 🔹 अपनी API Key यहाँ डालें
-
-    const requestData = {
-        prompt: prompt,
-        params: {
-            sampler_name: "k_euler_ancestral",
-            width: 512,
-            height: 512,
-            cfg_scale: 7,
-            steps: 50
-        },
-        nsfw: false,
-        trusted_workers: true
-    };
-
-    try {
-        const response = await fetch(apiUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "apikey": apiKey
-            },
-            body: JSON.stringify(requestData)
-        });
-
-        const data = await response.json();
-
-        if (data.id) {
-            console.log("✅ Image Generation Requested. Fetching Image...");
-            setTimeout(() => fetchGeneratedImage(data.id), 5000);
-        } else {
-            alert("❌ इमेज जनरेट करने में समस्या हुई। कृपया पुनः प्रयास करें।");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Text to Image Generator</title>
+    <style>
+        /* Page styling */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #0d1117;
+            color: white;
+            margin: 0;
+            padding: 20px;
         }
-    } catch (error) {
-        console.error("⚠️ त्रुटि:", error);
-        alert("❌ इमेज जनरेट करने में विफल। बाद में पुनः प्रयास करें!");
-    }
-}
+        h1 {
+            color: #58a6ff;
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #58a6ff;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1f6feb;
+        }
+        img {
+            margin-top: 20px;
+            max-width: 90%;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
 
-// ✅ Generated Image Fetch करने वाला Function (Corrected URL Format)
-async function fetchGeneratedImage(id) {
-    const apiUrl = https://stablehorde.net/api/v2/generate/status/${id};
-    const apiKey = "your-api-key-here"; // 🔹 अपनी API Key यहाँ डालें
+    <h1>AI Text to Image Generator</h1>
+    <p>Enter your text prompt below to generate an AI-powered image.</p>
+    
+    <input type="text" id="prompt" placeholder="Type your prompt here..." />
+    <br>
+    <button onclick="generateImage()">Generate Image</button>
+    
+    <p id="status"></p>
+    <img id="generatedImage" src="" alt="Generated Image will appear here" />
 
-    try {
-        const response = await fetch(apiUrl, {
-            method: "GET",
-            headers: {
-                "apikey": apiKey
+    <script>
+        async function generateImage() {
+            const prompt = document.getElementById("prompt").value;
+
+            if (prompt.trim() === "") {
+                alert("Please enter a prompt!");
+                return;
             }
-        });
 
-        const data = await response.json();
+            // Show loading text
+            document.getElementById("status").innerText = "Generating image, please wait...";
 
-        if (data.done) {
-            document.getElementById("generatedImage").src = data.generations[0].img;
-            console.log("✅ Image Fetched Successfully!");
-        } else {
-            console.log("⏳ Image अभी तैयार नहीं है, फिर से चेक कर रहे हैं...");
-            setTimeout(() => fetchGeneratedImage(id), 5000);
+            const apiUrl = "https://stablehorde.net/api/v2/generate/async";
+            const apiKey = "vifQFXwFMZG1oIsX0UTfKw"; // Your API Key
+
+            const requestData = {
+                prompt: prompt,
+                params: {
+                    sampler_name: "k_euler_ancestral",
+                    width: 512,
+                    height: 512,
+                    cfg_scale: 7,
+                    steps: 30
+                },
+                nsfw: false,
+                trusted_workers: true
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "apikey": apiKey
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                const data = await response.json();
+
+                if (data.id) {
+                    setTimeout(() => fetchGeneratedImage(data.id), 5000);
+                } else {
+                    document.getElementById("status").innerText = "Failed to generate image. Try again!";
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("status").innerText = "Error in generating image!";
+            }
         }
-    } catch (error) {
-        console.error("⚠️ त्रुटि:", error);
-        alert("❌ इमेज प्राप्त करने में विफल। बाद में पुनः प्रयास करें!");
-    }
-}
+
+        async function fetchGeneratedImage(id) {
+            const apiUrl = https://stablehorde.net/api/v2/generate/status/${id};
+            const apiKey = "vifQFXwFMZG1oIsX0UTfKw";
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: "GET",
+                    headers: {
+                        "apikey": apiKey
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.done) {
+                    document.getElementById("generatedImage").src = data.generations[0].img;
+                    document.getElementById("status").innerText = "Image generated successfully!";
+                } else {
+                    setTimeout(() => fetchGeneratedImage(id), 5000);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("status").innerText = "Failed to fetch image!";
+            }
+        }
+    </script>
+
+</body>
+</html>
