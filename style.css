@@ -1,0 +1,47 @@
+/* Website Ka Background Dark Mode Me Rakha Hai */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #121212;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header Ko Attractive Banane Ke Liye */
+header {
+    background: linear-gradient(90deg, #ff8c00, #ff0080);
+    padding: 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Generator Section */
+.generator {
+    margin-top: 50px;
+}
+
+input {
+    width: 60%;
+    padding: 10px;
+    font-size: 16px;
+}
+
+button {
+    background: #ff0080;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.output {
+    margin-top: 30px;
+}
+
+img {
+    max-width: 100%;
+    border: 2px solid white;
+    margin-top: 20px;
+}
