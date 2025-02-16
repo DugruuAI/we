@@ -43,7 +43,8 @@ async function generateImage() {
 
         if (!generationResponse.ok) throw new Error(API Error: ${generationResponse.status});
         
-        const { id: requestId } = await generationResponse.json();
+        const responseData = await generationResponse.json();
+        const requestId = responseData.id;
         const imageBase64 = await checkGenerationStatus(requestId);
         
         imageElement.src = data:image/png;base64,${imageBase64};
@@ -67,8 +68,8 @@ async function checkGenerationStatus(requestId) {
         
         if (statusData.done) {
             const resultResponse = await fetch(https://stablehorde.net/api/v2/generate/status/${requestId});
-            const { generations } = await resultResponse.json();
-            return generations[0].img;
+            const resultData = await resultResponse.json();
+            return resultData.generations[0].img;
         }
         
         await new Promise(resolve => setTimeout(resolve, 5000));
@@ -76,6 +77,6 @@ async function checkGenerationStatus(requestId) {
 }
 
 // Enter Key Support
-document.getElementById('prompt').addEventListener('keypress', (e) => {
+document.getElementById('prompt').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') generateImage();
 });
