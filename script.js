@@ -1,3 +1,5 @@
+"use strict";  // यह सभी Syntax Errors पकड़ने में मदद करेगा
+console.log("✅ Script Loaded Successfully!");
 // ✅ Image Generate करने वाला Function (Async Await का इस्तेमाल करके)
 async function generateImage() {
     const prompt = document.getElementById("prompt").value;
