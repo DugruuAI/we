@@ -72,4 +72,30 @@ async function fetchGeneratedImage(id) {
         console.error("त्रुटि:", error);
         alert("इमेज प्राप्त करने में विफल। बाद में पुनः प्रयास करें!");
     }
+} 
+/* Smooth Fade-in Effect */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* पूरे Page पर Smooth Load Animation */
+body {
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Generate Button को Animation देना */
+button {
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* जब इमेज Generate हो तब Smooth रूप से दिखे */
+img {
+    animation: fadeIn 2s ease-in-out;
 }
